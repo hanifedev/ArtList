@@ -9,7 +9,7 @@ import UIKit
 import PhotosUI
 import CoreData
 
-class DetailsViewController: UIViewController, PHPickerViewControllerDelegate {
+class DetailsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var nameTextField: UITextField!
@@ -47,17 +47,17 @@ class DetailsViewController: UIViewController, PHPickerViewControllerDelegate {
     }
     
     @objc func selectImage(){
-        var config = PHPickerConfiguration()
-        config.selectionLimit = 1
-        config.filter = .images
-        let controller = PHPickerViewController(configuration: config)
-        controller.delegate = self
-        present(controller, animated: true, completion: nil)
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
     }
     
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print(results)
-        dismiss(animated: true, completion: nil)
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        imageView.image = info[.originalImage] as? UIImage
+        self.dismiss(animated: true, completion: nil)
     }
     
     private func getFilteredData(){
